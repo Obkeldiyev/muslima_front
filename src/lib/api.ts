@@ -1,8 +1,9 @@
 // Typed client for the muslima Express backend.
 // All methods return parsed JSON or throw ApiError.
 
-export const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:9000";
+const configuredApiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
+
+export const API_BASE_URL = configuredApiBase ? configuredApiBase : "/api";
 
 const TOKEN_KEY = "muslima_admin_token";
 

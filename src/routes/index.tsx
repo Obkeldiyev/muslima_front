@@ -216,8 +216,8 @@ function BackendUnavailable() {
     <div className="rule-t rule-b py-8 my-8 text-center">
       <div className="eyebrow mb-2">A note from the pressroom</div>
       <p className="text-ink-soft max-w-xl mx-auto text-sm">
-        The editorial backend could not be reached. If you are running it locally, start the API at{" "}
-        <code className="font-mono">http://localhost:9000</code>, then refresh.
+        The editorial backend could not be reached. If you are running it locally, start the API on port{" "}
+        <code className="font-mono">3010</code> and make sure the proxy exposes <code className="font-mono">/api</code>, then refresh.
       </p>
     </div>
   );
