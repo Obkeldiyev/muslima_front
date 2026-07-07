@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { api, mediaUrl } from "@/lib/api";
+import { useSiteSettings } from "@/lib/site-settings";
 import { SiteHeader } from "@/components/site/Header";
 import { SiteFooter } from "@/components/site/Footer";
 import { EssayCard } from "@/components/site/EssayCard";
@@ -10,6 +11,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const settings = useSiteSettings();
+  const home = settings.text.home;
   const essaysQ = useQuery({ queryKey: ["public", "essays"], queryFn: api.publicApi.essays });
   const topicsQ = useQuery({ queryKey: ["public", "topics"], queryFn: api.publicApi.topics });
   const booksQ = useQuery({ queryKey: ["public", "books"], queryFn: api.publicApi.books });
@@ -32,18 +35,17 @@ function Home() {
       {/* Masthead */}
       <section className="mx-auto max-w-[1240px] px-6 md:px-10 pt-16 md:pt-24 pb-10 md:pb-16">
         <div className="max-w-5xl">
-          <div className="eyebrow mb-6">The Current Issue</div>
+          <div className="eyebrow mb-6">{home.mastheadKicker}</div>
           <h1 className="font-serif text-5xl md:text-7xl leading-[1.02] tracking-tight text-ink">
-            Essays for the slow reader, published without hurry.
+            {home.mastheadTitle}
           </h1>
           <p className="mt-6 max-w-3xl text-lg text-ink-soft leading-relaxed">
-            Muslima gathers essays, books, and curated departments into one calm publication —
-            designed to feel as deliberate as the work itself.
+            {home.mastheadDescription}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4 text-sm text-ink-soft">
-            <span className="rounded-full border border-rule/80 px-3 py-1">Topics + essays + books</span>
-            <span className="rounded-full border border-rule/80 px-3 py-1">Upload media in the studio</span>
-            <span className="rounded-full border border-rule/80 px-3 py-1">Editorial cards and rich layouts</span>
+            {home.mastheadPills.map((pill) => (
+              <span key={pill} className="rounded-full border border-rule/80 px-3 py-1">{pill}</span>
+            ))}
           </div>
         </div>
       </section>
@@ -61,7 +63,7 @@ function Home() {
           {/* Featured */}
           {feature && (
             <section className="mx-auto max-w-[1240px] px-6 md:px-10 pb-20 md:pb-24">
-              <SectionHeading kicker="Featured" title="From the editors" />
+              <SectionHeading kicker={home.featuredKicker} title={home.featuredTitle} />
               <div className="mt-10">
                 <EssayCard essay={feature} variant="feature" />
               </div>
@@ -72,7 +74,7 @@ function Home() {
           {secondary.length > 0 && (
             <section className="rule-t rule-b bg-secondary/40">
               <div className="mx-auto max-w-[1240px] px-6 md:px-10 py-20">
-                <SectionHeading kicker="In this issue" title="Recent essays" />
+                <SectionHeading kicker={home.recentKicker} title={home.recentTitle} />
                 <div className="mt-12 grid gap-8 md:grid-cols-3">
                   {secondary.map((e) => <EssayCard key={e.id} essay={e} />)}
                 </div>
@@ -85,9 +87,9 @@ function Home() {
             <section className="mx-auto max-w-[1240px] px-6 md:px-10 py-20 md:py-28">
               <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-12">
                 <div className="max-w-xl">
-                  <div className="eyebrow mb-4">Departments</div>
+                  <div className="eyebrow mb-4">{home.topicsKicker}</div>
                   <h2 className="font-serif text-4xl md:text-5xl leading-tight text-ink">
-                    Topics we return to.
+                    {home.topicsTitle}
                   </h2>
                   <p className="mt-4 text-lg leading-relaxed text-ink-soft">
                     A field guide to the recurring subjects, moods, and questions that shape the magazine.
@@ -143,7 +145,7 @@ function Home() {
           {books.length > 0 && (
             <section className="rule-t bg-secondary/30">
               <div className="mx-auto max-w-[1240px] px-6 md:px-10 py-20 md:py-28">
-                <SectionHeading kicker="Small editions" title="Books from the house" />
+                <SectionHeading kicker={home.booksKicker} title={home.booksTitle} />
                 <div className="mt-12 grid gap-8 md:grid-cols-4">
                   {books.slice(0, 4).map((b) => (
                     <Link key={b.id} to="/books/$slug" params={{ slug: b.slug }} className="group overflow-hidden rounded-[1.35rem] border border-rule/70 bg-card p-3 shadow-[0_16px_44px_-28px_rgba(0,0,0,0.24)] transition-all hover:-translate-y-1">
@@ -168,13 +170,13 @@ function Home() {
           {/* Rest of essays */}
           {rest.length > 0 && (
             <section className="mx-auto max-w-[1240px] px-6 md:px-10 py-20 md:py-28">
-              <SectionHeading kicker="Also in the issue" title="More reading" />
+              <SectionHeading kicker={home.moreKicker} title={home.moreTitle} />
               <div className="mt-8 grid gap-x-16 md:grid-cols-2">
                 {rest.map((e) => <EssayCard key={e.id} essay={e} variant="compact" />)}
               </div>
               <div className="mt-12 text-center">
                 <Link to="/essays" className="eyebrow border-b border-ink pb-1 hover:text-accent">
-                  See all essays →
+                  {home.seeAllLabel}
                 </Link>
               </div>
             </section>

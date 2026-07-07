@@ -20,21 +20,20 @@ const Ctx = createContext<AuthCtx | null>(null);
 const USER_KEY = "muslima_admin_user";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setTokenState] = useState<string | null>(null);
-  const [user, setUser] = useState<AuthUser | null>(null);
-
-  useEffect(() => {
-    const t = getToken();
-    setTokenState(t);
-    const raw = typeof window !== "undefined" ? window.localStorage.getItem(USER_KEY) : null;
-    if (raw) {
-      try {
-        setUser(JSON.parse(raw));
-      } catch {
-        /* ignore */
-      }
+  const [token, setTokenState] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return getToken();
+  });
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    if (typeof window === "undefined") return null;
+    const raw = window.localStorage.getItem(USER_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
     }
-  }, []);
+  });
 
   const login = useCallback(async (email: string, password: string) => {
     const res = await api.auth.login(email, password);

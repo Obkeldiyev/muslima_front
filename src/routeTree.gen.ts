@@ -20,6 +20,7 @@ import { Route as TopicsSlugRouteImport } from './routes/topics.$slug'
 import { Route as EssaysSlugRouteImport } from './routes/essays.$slug'
 import { Route as BooksSlugRouteImport } from './routes/books.$slug'
 import { Route as AdminTopicsRouteImport } from './routes/admin.topics'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminPagesRouteImport } from './routes/admin.pages'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -81,6 +82,11 @@ const AdminTopicsRoute = AdminTopicsRouteImport.update({
   path: '/topics',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPagesRoute = AdminPagesRouteImport.update({
   id: '/pages',
   path: '/pages',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/books/$slug': typeof BooksSlugRoute
   '/essays/$slug': typeof EssaysSlugRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/books/$slug': typeof BooksSlugRoute
   '/essays/$slug': typeof EssaysSlugRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/pages': typeof AdminPagesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/books/$slug': typeof BooksSlugRoute
   '/essays/$slug': typeof EssaysSlugRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/media'
     | '/admin/pages'
+    | '/admin/settings'
     | '/admin/topics'
     | '/books/$slug'
     | '/essays/$slug'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/media'
     | '/admin/pages'
+    | '/admin/settings'
     | '/admin/topics'
     | '/books/$slug'
     | '/essays/$slug'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/media'
     | '/admin/pages'
+    | '/admin/settings'
     | '/admin/topics'
     | '/books/$slug'
     | '/essays/$slug'
@@ -305,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTopicsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pages': {
       id: '/admin/pages'
       path: '/pages'
@@ -349,6 +368,7 @@ interface AdminRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
   AdminPagesRoute: typeof AdminPagesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminTopicsRoute: typeof AdminTopicsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -359,6 +379,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,
   AdminPagesRoute: AdminPagesRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminTopicsRoute: AdminTopicsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }

@@ -3,7 +3,14 @@
 
 const configuredApiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
 
-export const API_BASE_URL = configuredApiBase ? configuredApiBase : "/api";
+const normalizeApiBase = (value: string) => {
+  const trimmed = value.trim().replace(/\/+$/, "");
+  return trimmed.endsWith("/api") ? trimmed : `${trimmed}/api`;
+};
+
+export const API_BASE_URL = configuredApiBase
+  ? normalizeApiBase(configuredApiBase)
+  : "/api";
 
 const TOKEN_KEY = "muslima_admin_token";
 
@@ -53,6 +60,9 @@ async function request<T>(path: string, opts: FetchOpts = {}): Promise<T> {
   const text = await res.text();
   const data = text ? safeJson(text) : null;
   if (!res.ok) {
+    if (opts.auth && (res.status === 401 || res.status === 403)) {
+      setToken(null);
+    }
     const msg = extractMessage(data, res.statusText) || "Request failed";
     throw new ApiError(msg, res.status);
   }
@@ -169,6 +179,101 @@ export interface Page {
   updatedAt: string;
 }
 
+export interface SiteColors {
+  background: string;
+  foreground: string;
+  ink: string;
+  inkSoft: string;
+  rule: string;
+  accent: string;
+  accentForeground: string;
+  card: string;
+  cardForeground: string;
+  secondary: string;
+  secondaryForeground: string;
+  muted: string;
+  mutedForeground: string;
+  border: string;
+}
+
+export interface SiteTypography {
+  headingFont: string;
+  bodyFont: string;
+  paragraphSize: string;
+  headingSize: string;
+}
+
+export interface SiteBorderRadius {
+  card: string;
+  button: string;
+  input: string;
+}
+
+export interface SiteNavLabels {
+  essays: string;
+  topics: string;
+  books: string;
+  about: string;
+  studio: string;
+}
+
+export interface SiteBorderRadius {
+  card: string;
+  button: string;
+  input: string;
+}
+
+export interface SiteHomeText {
+  mastheadKicker: string;
+  mastheadTitle: string;
+  mastheadDescription: string;
+  mastheadPills: string[];
+  featuredKicker: string;
+  featuredTitle: string;
+  recentKicker: string;
+  recentTitle: string;
+  topicsKicker: string;
+  topicsTitle: string;
+  booksKicker: string;
+  booksTitle: string;
+  moreKicker: string;
+  moreTitle: string;
+  noContentMessage: string;
+  seeAllLabel: string;
+}
+
+export interface SiteAboutText {
+  metaTitle: string;
+  metaDescription: string;
+  kicker: string;
+  title: string;
+  paragraphs: string[];
+}
+
+export interface SiteFooterText {
+  description: string;
+  copyrightTemplate: string;
+  tag: string;
+}
+
+export interface SiteTextSettings {
+  siteTitle: string;
+  siteSubtitle: string;
+  issueLabel: string;
+  issueTagline: string;
+  nav: SiteNavLabels;
+  footer: SiteFooterText;
+  home: SiteHomeText;
+  about: SiteAboutText;
+}
+
+export interface SiteSettings {
+  colors: SiteColors;
+  typography: SiteTypography;
+  borderRadius: SiteBorderRadius;
+  text: SiteTextSettings;
+}
+
 /* ---------- Public endpoints ---------- */
 
 export const api = {
@@ -186,6 +291,7 @@ export const api = {
     essay: (slug: string) => request<Essay>(`/public/essays/${slug}`),
     books: () => request<Book[]>("/public/books"),
     page: (slug: string) => request<Page>(`/public/pages/${slug}`),
+    siteSettings: () => request<SiteSettings>("/public/site-settings"),
   },
   admin: {
     topics: {
@@ -235,6 +341,10 @@ export const api = {
         }),
       removeSection: (id: string) =>
         request<void>(`/admin/pages/sections/${id}`, { method: "DELETE", auth: true }),
+    },
+    siteSettings: {
+      get: () => request<SiteSettings>("/admin/settings", { auth: true }),
+      update: (settings: SiteSettings) => request<SiteSettings>("/admin/settings", { method: "PUT", body: settings, auth: true }),
     },
     media: {
       list: () => request<MediaAsset[]>("/admin/media", { auth: true }),

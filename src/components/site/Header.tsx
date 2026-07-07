@@ -1,20 +1,22 @@
 import { Link } from "@tanstack/react-router";
-
-const nav = [
-  { to: "/essays", label: "Essays" },
-  { to: "/topics", label: "Topics" },
-  { to: "/books", label: "Books" },
-  { to: "/about", label: "About" },
-] as const;
+import { useSiteSettings } from "@/lib/site-settings";
 
 export function SiteHeader() {
+  const settings = useSiteSettings();
+  const nav = [
+    { to: "/essays", label: settings.text.nav.essays },
+    { to: "/topics", label: settings.text.nav.topics },
+    { to: "/books", label: settings.text.nav.books },
+    { to: "/about", label: settings.text.nav.about },
+  ] as const;
+
   return (
     <header className="rule-b bg-background">
       <div className="mx-auto max-w-[1240px] px-6 md:px-10">
         <div className="flex items-center justify-between py-5">
           <Link to="/" className="flex items-baseline gap-3">
-            <span className="font-serif text-2xl tracking-tight text-ink">Muslima</span>
-            <span className="eyebrow hidden sm:inline">A Reading Room</span>
+            <span className="font-serif text-2xl tracking-tight text-ink">{settings.text.siteTitle}</span>
+            <span className="eyebrow hidden sm:inline">{settings.text.siteSubtitle}</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8">
             {nav.map((n) => (
@@ -33,13 +35,13 @@ export function SiteHeader() {
               to="/admin"
               className="eyebrow hover:text-ink transition-colors"
             >
-              Studio
+              {settings.text.nav.studio}
             </Link>
           </div>
         </div>
         <div className="rule-t flex items-center justify-between py-2.5 text-[0.68rem] tracking-[0.14em] uppercase text-ink-soft">
-          <span>Issue No. 01</span>
-          <span className="hidden sm:inline">Essays · Topics · Books</span>
+          <span>{settings.text.issueLabel}</span>
+          <span className="hidden sm:inline">{settings.text.issueTagline}</span>
           <span>{new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
         </div>
       </div>

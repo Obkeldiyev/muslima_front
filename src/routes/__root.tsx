@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../lib/auth";
+import { SiteSettingsProvider } from "../lib/site-settings";
 import { Toaster } from "sonner";
 
 function NotFoundComponent() {
@@ -59,10 +60,12 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Outlet />
-        <Toaster position="bottom-right" theme="light" />
-      </AuthProvider>
+      <SiteSettingsProvider>
+        <AuthProvider>
+          <Outlet />
+          <Toaster position="bottom-right" theme="light" />
+        </AuthProvider>
+      </SiteSettingsProvider>
     </QueryClientProvider>
   );
 }

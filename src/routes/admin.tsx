@@ -6,13 +6,14 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
-const nav: { to: "/admin" | "/admin/essays" | "/admin/topics" | "/admin/books" | "/admin/pages" | "/admin/media"; label: string; exact?: boolean }[] = [
+const nav: { to: "/admin" | "/admin/essays" | "/admin/topics" | "/admin/books" | "/admin/pages" | "/admin/media" | "/admin/settings"; label: string; exact?: boolean }[] = [
   { to: "/admin", label: "Overview", exact: true },
   { to: "/admin/essays", label: "Essays" },
   { to: "/admin/topics", label: "Topics" },
   { to: "/admin/books", label: "Books" },
   { to: "/admin/pages", label: "Pages" },
   { to: "/admin/media", label: "Media" },
+  { to: "/admin/settings", label: "Site settings" },
 ];
 
 function AdminLayout() {

@@ -56,6 +56,11 @@
 
 :root {
   --radius: 3px;
+  --radius-card: 1.5rem;
+  --radius-button: 0.75rem;
+  --radius-input: 0.5rem;
+  --body-size: 16px;
+  --heading-size: 2.5rem;
 
   /* Editorial palette */
   --paper: oklch(0.975 0.012 85);          /* warm cream */
@@ -132,9 +137,18 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-size: var(--body-size);
     line-height: 1.7;
     letter-spacing: 0.001em;
+  }
+  h1 {
+    font-size: var(--heading-size);
+  }
+  button, select {
+    border-radius: var(--radius-button);
+  }
+  input, textarea {
+    border-radius: var(--radius-input);
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
