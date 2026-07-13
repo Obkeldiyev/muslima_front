@@ -94,6 +94,26 @@ function SettingsAdmin() {
   function patchSocials(socials: SiteSettings["text"]["socials"]) {
     setDraft((d) => ({ ...d, text: { ...d.text, socials } }));
   }
+  function normalizeSocialUrl(url: string) {
+    const trimmed = url.trim();
+    if (!trimmed) return "";
+    if (/^(https?:\/\/|mailto:|tel:)/i.test(trimmed)) return trimmed;
+    return `https://${trimmed}`;
+  }
+  function updateSocial(index: number, patch: Partial<SiteSettings["text"]["socials"][number]>) {
+    setDraft((d) => ({
+      ...d,
+      text: {
+        ...d.text,
+        socials: d.text.socials.map((item, i) => {
+          if (i !== index) return item;
+          const next = { ...item, ...patch } as SiteSettings["text"]["socials"][number];
+          if (patch.url !== undefined) next.url = normalizeSocialUrl(patch.url);
+          return next;
+        }),
+      },
+    }));
+  }
   function patchNav(patch: Partial<SiteSettings["text"]["nav"]>) {
     setDraft((d) => ({ ...d, text: { ...d.text, nav: { ...d.text.nav, ...patch } } }));
   }
@@ -327,13 +347,15 @@ function SettingsAdmin() {
                     className="w-full bg-transparent border border-rule rounded-sm px-3 py-2 text-ink text-sm focus:border-ink focus:outline-none"
                     placeholder="Telegram"
                     value={social.label}
-                    onChange={(e) => patchSocials(draft.text.socials.map((item, i) => i === index ? { ...item, label: e.target.value } : item))}
+                    onChange={(e) => updateSocial(index, { label: e.target.value })}
                   />
                   <input
                     className="w-full bg-transparent border border-rule rounded-sm px-3 py-2 text-ink text-sm focus:border-ink focus:outline-none"
                     placeholder="https://t.me/your-channel"
+                    type="url"
+                    inputMode="url"
                     value={social.url}
-                    onChange={(e) => patchSocials(draft.text.socials.map((item, i) => i === index ? { ...item, url: e.target.value } : item))}
+                    onChange={(e) => updateSocial(index, { url: e.target.value })}
                   />
                   <button
                     type="button"

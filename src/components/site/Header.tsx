@@ -9,7 +9,7 @@ export function SiteHeader() {
     { to: "/books", label: settings.text.nav.books },
     { to: "/about", label: settings.text.nav.about },
   ] as const;
-  const socials = settings.text.socials.filter((social) => social?.label?.trim() && social?.url?.trim());
+  const socials = settings.text.socials.filter((social) => social?.url?.trim());
 
   return (
     <header className="rule-b bg-background">
