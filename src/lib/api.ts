@@ -256,12 +256,18 @@ export interface SiteFooterText {
   tag: string;
 }
 
+export interface SiteSocialLink {
+  label: string;
+  url: string;
+}
+
 export interface SiteTextSettings {
   siteTitle: string;
   siteSubtitle: string;
   issueLabel: string;
   issueTagline: string;
   nav: SiteNavLabels;
+  socials: SiteSocialLink[];
   footer: SiteFooterText;
   home: SiteHomeText;
   about: SiteAboutText;

@@ -91,6 +91,9 @@ function SettingsAdmin() {
   function patchText(patch: Partial<SiteSettings["text"]>) {
     setDraft((d) => ({ ...d, text: { ...d.text, ...patch } }));
   }
+  function patchSocials(socials: SiteSettings["text"]["socials"]) {
+    setDraft((d) => ({ ...d, text: { ...d.text, socials } }));
+  }
   function patchNav(patch: Partial<SiteSettings["text"]["nav"]>) {
     setDraft((d) => ({ ...d, text: { ...d.text, nav: { ...d.text.nav, ...patch } } }));
   }
@@ -307,6 +310,41 @@ function SettingsAdmin() {
             {(["essays", "topics", "books", "about", "studio"] as const).map((key) => (
               <TextRow key={key} label={key.charAt(0).toUpperCase() + key.slice(1)} hint="" value={draft.text.nav[key]} onChange={(v) => patchNav({ [key]: v })} />
             ))}
+          </section>
+
+          <section className="rule-t pt-6 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="font-serif text-xl text-ink">Top socials</h2>
+                <p className="mt-1 text-xs text-ink-soft">Add Telegram, Instagram, X, or any other social profile. These appear in the header.</p>
+              </div>
+              <GhostButton onClick={() => patchSocials([...draft.text.socials, { label: "", url: "" }])}>Add link</GhostButton>
+            </div>
+            <div className="space-y-2">
+              {draft.text.socials.map((social, index) => (
+                <div key={`${social.label}-${index}`} className="grid gap-2 md:grid-cols-[1fr_1fr_auto]">
+                  <input
+                    className="w-full bg-transparent border border-rule rounded-sm px-3 py-2 text-ink text-sm focus:border-ink focus:outline-none"
+                    placeholder="Telegram"
+                    value={social.label}
+                    onChange={(e) => patchSocials(draft.text.socials.map((item, i) => i === index ? { ...item, label: e.target.value } : item))}
+                  />
+                  <input
+                    className="w-full bg-transparent border border-rule rounded-sm px-3 py-2 text-ink text-sm focus:border-ink focus:outline-none"
+                    placeholder="https://t.me/your-channel"
+                    value={social.url}
+                    onChange={(e) => patchSocials(draft.text.socials.map((item, i) => i === index ? { ...item, url: e.target.value } : item))}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => patchSocials(draft.text.socials.filter((_, i) => i !== index))}
+                    className="rounded-sm border border-rule px-3 py-2 text-sm text-ink-soft hover:border-ink hover:text-ink"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section className="rule-t pt-6 space-y-3">

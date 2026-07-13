@@ -9,6 +9,7 @@ export function SiteHeader() {
     { to: "/books", label: settings.text.nav.books },
     { to: "/about", label: settings.text.nav.about },
   ] as const;
+  const socials = settings.text.socials.filter((social) => social?.label?.trim() && social?.url?.trim());
 
   return (
     <header className="rule-b bg-background">
@@ -30,11 +31,23 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/admin"
-              className="eyebrow hover:text-ink transition-colors"
-            >
+          <div className="flex items-center gap-3">
+            {socials.length > 0 && (
+              <div className="hidden md:flex items-center gap-2">
+                {socials.map((social) => (
+                  <a
+                    key={`${social.label}-${social.url}`}
+                    href={social.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-rule px-2.5 py-1 text-[0.68rem] tracking-[0.14em] uppercase text-ink-soft transition-colors hover:border-ink hover:text-ink"
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            )}
+            <Link to="/admin" className="eyebrow hover:text-ink transition-colors">
               {settings.text.nav.studio}
             </Link>
           </div>

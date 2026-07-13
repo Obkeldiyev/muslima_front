@@ -48,6 +48,10 @@ export const DEFAULT_SETTINGS: SiteSettings = {
       about: "About",
       studio: "Studio",
     },
+    socials: [
+      { label: "Telegram", url: "https://t.me/" },
+      { label: "Instagram", url: "https://www.instagram.com/" },
+    ],
     footer: {
       description:
         "A quiet publication for essays, books, and long-form reading. Published slowly, read slowly.",
@@ -107,6 +111,14 @@ export function mergeSettings(raw: unknown): SiteSettings {
       ...d.text,
       ...(r.text ?? {}),
       nav: { ...d.text.nav, ...(r.text?.nav ?? {}) },
+      socials: Array.isArray(r.text?.socials)
+        ? r.text.socials
+            .filter((entry: { label?: unknown; url?: unknown } | null | undefined) => entry && (entry.label || entry.url))
+            .map((entry: { label?: unknown; url?: unknown }) => ({
+              label: typeof entry?.label === "string" ? entry.label : "",
+              url: typeof entry?.url === "string" ? entry.url : "",
+            }))
+        : d.text.socials,
       // handle old shape: text.footerDescription / text.footerCopyright / text.footerTag
       footer: {
         description:
